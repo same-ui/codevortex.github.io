@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+ break-all; font-family: monospace; <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
@@ -58,7 +59,7 @@
             font-family: 'Changa', sans-serif;
         }
 
-        /* --- Ticker Animation (NEW) --- */
+        /* --- Ticker Animation --- */
         .ticker-wrap {
             position: fixed;
             top: 0;
@@ -82,15 +83,15 @@
             display: inline-flex;
             align-items: center;
             padding: 0 2rem;
-            color: var(--text-secondary);
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 0.8rem;
+            color: var(--gold);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 1px;
         }
         
-        .ticker-val { margin-left: 5px; color: #fff; }
-        .ticker-change { margin-left: 5px; }
+        .ticker-val { margin-left: 10px; color: #fff; font-family: 'Saira', sans-serif; font-weight: 400; font-size: 0.8rem; }
         .ticker-up { color: var(--profit-green); }
-        .ticker-down { color: var(--loss-red); }
 
         @keyframes ticker {
             0% { transform: translateX(0); }
@@ -124,10 +125,126 @@
             z-index: 100;
         }
 
-        /* --- Navigation Bar (Collapsible/Positional) --- */
+        /* --- Trading Download Overlay (NEW) --- */
+        .trading-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 8, 16, 0.95);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            backdrop-filter: blur(5px);
+        }
+
+        .trading-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .order-ticket {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-top: 4px solid var(--profit-green);
+            width: 380px;
+            padding: 2.5rem 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 60px rgba(0, 255, 136, 0.15);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .order-ticket::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(45deg, transparent 48%, rgba(255,255,255,0.03) 50%, transparent 52%);
+            background-size: 15px 15px;
+            pointer-events: none;
+        }
+
+        .order-type {
+            color: var(--profit-green);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1.8rem;
+            margin-bottom: 0.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px var(--glow-green);
+        }
+
+        .order-asset {
+            color: var(--text-secondary);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.9rem;
+            margin-bottom: 2.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 1rem;
+            width: 100%;
+        }
+
+        .price-display {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            transition: transform 0.1s;
+            display: inline-block;
+            line-height: 1;
+        }
+
+        .pnl-display {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            margin-bottom: 2.5rem;
+            transition: color 0.3s;
+            font-weight: 600;
+        }
+
+        .order-status {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            color: var(--gold);
+            min-height: 1.5rem;
+            letter-spacing: 1px;
+            background: rgba(255, 215, 0, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .blink { animation: blinker 1s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
+
+        .pulse-green { animation: pulse-green 0.5s ease-in-out infinite alternate; }
+        @keyframes pulse-green {
+            from { text-shadow: 0 0 10px var(--profit-green); transform: scale(1); }
+            to { text-shadow: 0 0 30px var(--profit-green); transform: scale(1.1); }
+        }
+
+        .bg-chart-line {
+            position: absolute;
+            bottom: 0; left: 0; width: 100%; height: 120px;
+            opacity: 0.15;
+            z-index: -1;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 350 100' preserveAspectRatio='none'%3E%3Cpath d='M0,100 L0,80 L20,85 L40,60 L60,70 L80,40 L100,50 L120,20 L140,40 L160,10 L180,30 L200,5 L220,25 L240,15 L350,0 L350,100 Z' fill='%2300ff88'/%3E%3C/svg%3E") no-repeat bottom;
+            background-size: cover;
+        }
+
+        /* --- Navigation Bar --- */
         .nav-dock {
             position: fixed;
-            top: 50px; /* Moved down slightly to accommodate ticker */
+            top: 50px;
             left: 50%;
             transform: translateX(-50%);
             width: 95%;
@@ -166,7 +283,7 @@
             color: var(--profit-green);
             cursor: pointer;
             font-size: 1.5rem;
-            display: none; /* Shown on mobile or when closed */
+            display: none; 
             padding: 0.5rem;
         }
 
@@ -209,7 +326,6 @@
             box-shadow: 0 0 15px var(--glow-green);
         }
 
-        /* Language Switcher - Bigger & Clearer */
         .lang-switch-container {
             display: flex;
             gap: 5px;
@@ -292,7 +408,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 80vh; /* Changed to min-height for flexibility */
+            min-height: 80vh;
             text-align: center;
             background: radial-gradient(circle at center, rgba(0, 255, 136, 0.05) 0%, transparent 70%);
             padding-bottom: 4rem;
@@ -342,7 +458,6 @@
             transform: scaleX(1);
         }
         
-        /* Daily Progress Strip */
         .daily-progress-container {
             width: 100%;
             max-width: 1200px;
@@ -385,7 +500,7 @@
             font-size: 1.1rem;
         }
 
-        /* --- Grid Layouts (6 items) --- */
+        /* --- Cards --- */
         .grid-6 {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -394,7 +509,7 @@
 
         @media (min-width: 1200px) {
             .grid-6 {
-                grid-template-columns: repeat(3, 1fr); /* Force 3 columns on wide screens to show 6 nicely */
+                grid-template-columns: repeat(3, 1fr);
             }
         }
 
@@ -417,7 +532,6 @@
             box-shadow: 0 10px 30px rgba(0, 255, 136, 0.1);
         }
 
-        /* Enhanced Tool and Service Cards */
         .tool-card, .service-card {
             position: relative;
             overflow: hidden;
@@ -466,7 +580,6 @@
             transform: scale(0.95);
         }
 
-        /* Premium EA Buttons */
         .premium-buy-btn, .premium-subscribe-btn {
             position: relative;
             overflow: hidden;
@@ -597,7 +710,6 @@
         }
         .btn-outline:hover { border-color: var(--text-primary); color: #fff; }
 
-        /* --- Warning Box for Free EAs --- */
         .warning-box {
             background: rgba(255, 51, 102, 0.1);
             border: 1px solid var(--loss-red);
@@ -622,14 +734,13 @@
             font-weight: 600;
         }
 
-        /* --- Premium EA Dashboard (The "Work") --- */
+        /* --- Premium Layout --- */
         .premium-layout {
             display: grid;
             grid-template-columns: 350px 1fr;
             gap: 2rem;
         }
         
-        /* New Wrapper for left column items */
         .left-column {
             display: flex;
             flex-direction: column;
@@ -649,7 +760,6 @@
             box-shadow: 0 0 30px rgba(255, 215, 0, 0.1);
         }
         
-        /* NEW PANEL STYLE */
         .premium-action-panel {
             background: var(--bg-elevated);
             border: 1px solid var(--border);
@@ -712,7 +822,6 @@
             background: rgba(0, 255, 136, 0.1);
         }
 
-        /* Recent Trades Table */
         .trades-container {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -738,7 +847,6 @@
         .type-sell { color: var(--loss-red); background: rgba(255, 51, 102, 0.1); }
         .profit-val { font-family: 'IBM Plex Mono', monospace; font-weight: 700; }
 
-        /* Pagination Controls */
         .pagination-container {
             display: flex;
             justify-content: center;
@@ -766,7 +874,6 @@
             box-shadow: 0 0 15px var(--glow-green);
         }
 
-        /* --- Footer/Crypto --- */
         .crypto-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -782,7 +889,22 @@
             border: 1px solid var(--border);
         }
 
-        /* Responsive Adjustments */
+        .broker-list {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+        .broker-tag {
+            display: inline-block;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            margin: 0.2rem;
+            color: var(--text-secondary);
+        }
+
         @media (max-width: 768px) {
             .nav-toggle { display: block; }
             .nav-dock.closed .nav-links { display: none; }
@@ -795,29 +917,41 @@
             .premium-layout { grid-template-columns: 1fr; }
             .section-title { font-size: 2rem; }
             .chart-controls { justify-content: center; }
-            .ticker-wrap { display: none; /* Hide ticker on very small screens if needed */ }
+            .ticker-wrap { display: none; }
             .nav-dock { top: 20px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- COOL NEW FEATURE: Live Market Ticker -->
+    <!-- Trading Context Download Overlay -->
+    <div id="download-overlay" class="trading-overlay">
+        <div class="order-ticket">
+            <div class="bg-chart-line"></div>
+            <div class="order-type">MARKET BUY</div>
+            <div class="order-asset" id="dl-title">ASSET_NAME</div>
+            
+            <div class="price-display" id="dl-price">1.08200</div>
+            <div class="pnl-display" id="dl-pnl">+0.00%</div>
+            
+            <div class="order-status" id="dl-status">CONNECTING...</div>
+        </div>
+    </div>
+
+    <!-- Promotional Ticker -->
     <div class="ticker-wrap">
         <div class="ticker">
-            <div class="ticker-item">EUR/USD <span class="ticker-val ticker-up">1.0924 <span class="ticker-change">(+0.12%)</span></span></div>
-            <div class="ticker-item">GBP/USD <span class="ticker-val ticker-down">1.2645 <span class="ticker-change">(-0.05%)</span></span></div>
-            <div class="ticker-item">USD/JPY <span class="ticker-val ticker-up">149.32 <span class="ticker-change">(+0.30%)</span></span></div>
-            <div class="ticker-item">XAU/USD <span class="ticker-val ticker-up">2,345.50 <span class="ticker-change">(+1.20%)</span></span></div>
-            <div class="ticker-item">BTC/USD <span class="ticker-val ticker-up">67,890.00 <span class="ticker-change">(+2.5%)</span></span></div>
-            <div class="ticker-item">ETH/USD <span class="ticker-val ticker-down">3,450.20 <span class="ticker-change">(-0.8%)</span></span></div>
-            <div class="ticker-item">US30 <span class="ticker-val ticker-up">39,100 <span class="ticker-change">(+0.45%)</span></span></div>
-            <div class="ticker-item">NAS100 <span class="ticker-val ticker-up">18,250 <span class="ticker-change">(+0.70%)</span></span></div>
-            <!-- Duplicate for infinite scroll effect -->
-            <div class="ticker-item">EUR/USD <span class="ticker-val ticker-up">1.0924 <span class="ticker-change">(+0.12%)</span></span></div>
-            <div class="ticker-item">GBP/USD <span class="ticker-val ticker-down">1.2645 <span class="ticker-change">(-0.05%)</span></span></div>
-            <div class="ticker-item">USD/JPY <span class="ticker-val ticker-up">149.32 <span class="ticker-change">(+0.30%)</span></span></div>
-            <div class="ticker-item">XAU/USD <span class="ticker-val ticker-up">2,345.50 <span class="ticker-change">(+1.20%)</span></span></div>
+            <div class="ticker-item">FREE EAs <span class="ticker-val ticker-up">DOWNLOAD NOW</span></div>
+            <div class="ticker-item">FREE INDICATORS <span class="ticker-val ticker-up">PRO TOOLS</span></div>
+            <div class="ticker-item">PREMIUM EAs <span class="ticker-val ticker-up">HIGH WIN RATE</span></div>
+            <div class="ticker-item">MT4/MT5 <span class="ticker-val ticker-up">TOOLS AVAILABLE</span></div>
+            <div class="ticker-item">FOREX ROBOTS <span class="ticker-val ticker-up">AUTOMATED PROFIT</span></div>
+            <div class="ticker-item">CRYPTO BOTS <span class="ticker-val ticker-up">24/7 TRADING</span></div>
+            <div class="ticker-item">FREE EAs <span class="ticker-val ticker-up">DOWNLOAD NOW</span></div>
+            <div class="ticker-item">FREE INDICATORS <span class="ticker-val ticker-up">PRO TOOLS</span></div>
+            <div class="ticker-item">PREMIUM EAs <span class="ticker-val ticker-up">HIGH WIN RATE</span></div>
+            <div class="ticker-item">MT4/MT5 <span class="ticker-val ticker-up">TOOLS AVAILABLE</span></div>
+            <div class="ticker-item">FOREX ROBOTS <span class="ticker-val ticker-up">AUTOMATED PROFIT</span></div>
         </div>
     </div>
 
@@ -878,12 +1012,9 @@
                     </div>
                 </div>
 
-                <!-- NEW DAILY PROGRESS SECTION -->
                 <div class="daily-progress-container">
                     <div class="daily-title" data-en="LIVE DAILY PERFORMANCE" data-ar="أداء يومي مباشر">LIVE DAILY PERFORMANCE</div>
-                    <div id="daily-progress-grid" class="daily-grid">
-                        <!-- Injected via JS -->
-                    </div>
+                    <div id="daily-progress-grid" class="daily-grid"></div>
                 </div>
 
                 <button class="btn btn-green" style="margin-top: 3rem; padding: 1rem 3rem; font-size: 1.2rem;" onclick="showSection('premium')">
@@ -900,7 +1031,6 @@
                 <h2 class="section-title" data-en="FREE EXPERT ADVISORS" data-ar="مستشارون خبراء مجانيون">FREE EXPERT ADVISORS</h2>
             </div>
 
-            <!-- WARNING & NOTES -->
             <div class="warning-box">
                 <div class="warning-icon"><i data-lucide="triangle-alert"></i></div>
                 <div class="warning-text">
@@ -943,13 +1073,13 @@
                 <h2 class="section-title" data-en="TRADING TOOLS" data-ar="أدوات التداول">TRADING TOOLS</h2>
             </div>
             <div id="tools-grid" class="grid-6" style="grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));">
-                <!-- Content injected via JS (3 per page) -->
+                <!-- Content injected via JS -->
             </div>
             <div class="pagination-container" id="tools-pagination"></div>
         </div>
     </section>
 
-    <!-- PREMIUM EAS SECTION (THE CORE WORK) -->
+    <!-- PREMIUM EAS SECTION -->
     <section id="premium" class="section">
         <div class="container">
             <div id="premium-container">
@@ -1004,17 +1134,9 @@
 
     <!-- LOGIC SCRIPT -->
     <script>
-        // --- CONFIG ---
-        // REPLACE THIS with your specific Telegram Link if it changes
         const telegramLink = "https://t.me/Code_Vortex";
-        
-        // REPLACE THIS with your GitHub Repo RAW URL when you are ready.
-        // Example: "https://raw.githubusercontent.com/YourUsername/YourRepo/main/downloads/"
-        const github_repo_url = null; 
 
-        // --- DATA OBJECTS (PRESERVED & EXPANDED) ---
-        
-        // 20 Free EAs with expanded details
+        // DATA OBJECTS
         const freeEAs = [
             { title: "Trend Master Pro", titleAr: "ترند ماستر برو", description: "Advanced trend-following EA using moving averages.", winRate: "68%", trades: "156", minDep: "$100", pair: "EURUSD", explanation: "Uses 200 EMA to determine trend direction and RSI for entry." },
             { title: "Breakout Hunter", titleAr: "صائد الاختراقات", description: "Captures breakout opportunities from consolidation.", winRate: "62%", trades: "203", minDep: "$200", pair: "GBPUSD", explanation: "Identifies box ranges during Asian session and trades the London breakout." },
@@ -1038,7 +1160,6 @@
             { title: "Hedge Master", titleAr: "ماستر التحوط", description: "Professional hedging EA.", winRate: "67%", trades: "112", minDep: "$2000", pair: "EURUSD", explanation: "Opens buy and sell to capture volatility." }
         ];
 
-        // 12 Indicators
         const indicators = [
             { title: "Trend Strength", description: "MTF trend strength meter.", features: "MTF Analysis, Alert System" },
             { title: "S/R Zones", description: "Auto plots support/resistance.", features: "Auto-Detection, Zone Strength" },
@@ -1054,215 +1175,147 @@
             { title: "Multi-Dash", description: "Monitor 28 pairs at once.", features: "Trend Filter, Signals" }
         ];
 
-        // 8 Tools (Updated to 3 per page -> 3 pages)
         const tools = [
             { 
-                title: "MT4 to MT5 Bridge", 
-                titleAr: "جسر MT4 إلى MT5",
-                price: "$299", 
-                desc: "Seamless trade copying between MT4 and MT5 platforms.",
-                descAr: "نسخ تداولات سلس بين منصات MT4 و MT5.",
-                features: ["Real-time synchronization", "Lot size converter", "Magic number filter", "Unlimited accounts"],
-                featuresAr: ["مزامنة في الوقت الفعلي", "محول حجم اللوت", "مرشح الرقم السحري", "حسابات غير محدودة"]
+                title: "MT4 to MT5 Bridge", titleAr: "جسر MT4 إلى MT5", price: "$299", 
+                desc: "Seamless trade copying between MT4 and MT5 platforms.", descAr: "نسخ تداولات سلس بين منصات MT4 و MT5.",
+                features: ["Real-time synchronization", "Lot size converter", "Magic number filter", "Unlimited accounts"], featuresAr: ["مزامنة في الوقت الفعلي", "محول حجم اللوت", "مرشح الرقم السحري", "حسابات غير محدودة"]
             },
             { 
-                title: "Master-Slave Copier", 
-                titleAr: "ناسخ رئيسي-تابع",
-                price: "$399", 
-                desc: "Professional multi-account trade copier with advanced filtering.",
-                descAr: "ناسخ تداولات متعدد الحسابات احترافي مع تصفية متقدمة.",
-                features: ["Copy to unlimited slaves", "Risk management per account", "Reverse copying mode", "Symbol mapping"],
-                featuresAr: ["نسخ لعبيد غير محدودين", "إدارة مخاطر لكل حساب", "وضع النسخ العكسي", "تعيين الرموز"]
+                title: "Master-Slave Copier", titleAr: "ناسخ رئيسي-تابع", price: "$399", 
+                desc: "Professional multi-account trade copier with advanced filtering.", descAr: "ناسخ تداولات متعدد الحسابات احترافي مع تصفية متقدمة.",
+                features: ["Copy to unlimited slaves", "Risk management per account", "Reverse copying mode", "Symbol mapping"], featuresAr: ["نسخ لعبيد غير محدودين", "إدارة مخاطر لكل حساب", "وضع النسخ العكسي", "تعيين الرموز"]
             },
             { 
-                title: "Telegram Copier MT4", 
-                titleAr: "ناسخ تيليجرام MT4",
-                price: "$199", 
-                desc: "Send your MT4 trades directly to Telegram channel with screenshots.",
-                descAr: "أرسل تداولات MT4 مباشرة إلى قناة تيليجرام مع لقطات الشاشة.",
-                features: ["Instant notifications", "Trade screenshots", "P&L reports", "Custom message format"],
-                featuresAr: ["إشعارات فورية", "لقطات شاشة للصفقات", "تقارير الربح والخسارة", "تنسيق رسالة مخصص"]
+                title: "Telegram Copier MT4", titleAr: "ناسخ تيليجرام MT4", price: "$199", 
+                desc: "Send your MT4 trades directly to Telegram channel with screenshots.", descAr: "أرسل تداولات MT4 مباشرة إلى قناة تيليجرام مع لقطات الشاشة.",
+                features: ["Instant notifications", "Trade screenshots", "P&L reports", "Custom message format"], featuresAr: ["إشعارات فورية", "لقطات شاشة للصفقات", "تقارير الربح والخسارة", "تنسيق رسالة مخصص"]
             },
             { 
-                title: "Telegram Copier MT5", 
-                titleAr: "ناسخ تيليجرام MT5",
-                price: "$199", 
-                desc: "Advanced MT5 integration with Telegram bot commands.",
-                descAr: "تكامل MT5 متقدم مع أوامر بوت تيليجرام.",
-                features: ["Bot command control", "Multi-account support", "Emoji indicators", "Performance analytics"],
-                featuresAr: ["تحكم بأوامر البوت", "دعم متعدد الحسابات", "مؤشرات إيموجي", "تحليلات الأداء"]
+                title: "Telegram Copier MT5", titleAr: "ناسخ تيليجرام MT5", price: "$199", 
+                desc: "Advanced MT5 integration with Telegram bot commands.", descAr: "تكامل MT5 متقدم مع أوامر بوت تيليجرام.",
+                features: ["Bot command control", "Multi-account support", "Emoji indicators", "Performance analytics"], featuresAr: ["تحكم بأوامر البوت", "دعم متعدد الحسابات", "مؤشرات إيموجي", "تحليلات الأداء"]
             },
             { 
-                title: "MT4 Discord Bridge", 
-                titleAr: "جسر MT4 ديسكورد",
-                price: "$249", 
-                desc: "Stream your MT4 signals to Discord server with rich embeds.",
-                descAr: "بث إشارات MT4 إلى خادم ديسكورد مع تضمينات غنية.",
-                features: ["Rich embed messages", "Channel categorization", "Role-based access", "Live stats dashboard"],
-                featuresAr: ["رسائل تضمين غنية", "تصنيف القنوات", "وصول قائم على الأدوار", "لوحة إحصائيات مباشرة"]
+                title: "MT4 Discord Bridge", titleAr: "جسر MT4 ديسكورد", price: "$249", 
+                desc: "Stream your MT4 signals to Discord server with rich embeds.", descAr: "بث إشارات MT4 إلى خادم ديسكورد مع تضمينات غنية.",
+                features: ["Rich embed messages", "Channel categorization", "Role-based access", "Live stats dashboard"], featuresAr: ["رسائل تضمين غنية", "تصنيف القنوات", "وصول قائم على الأدوار", "لوحة إحصائيات مباشرة"]
             },
             { 
-                title: "MT5 Discord Bridge", 
-                titleAr: "جسر MT5 ديسكورد",
-                price: "$249", 
-                desc: "Next-gen Discord bot with interactive charts and analysis.",
-                descAr: "بوت ديسكورد من الجيل التالي مع رسوم بيانية تفاعلية وتحليل.",
-                features: ["Interactive chart generation", "Webhook support", "Custom slash commands", "Auto-moderation"],
-                featuresAr: ["توليد رسوم بيانية تفاعلية", "دعم الويب هوك", "أوامر مائلة مخصصة", "إشراف تلقائي"]
+                title: "MT5 Discord Bridge", titleAr: "جسر MT5 ديسكورد", price: "$249", 
+                desc: "Next-gen Discord bot with interactive charts and analysis.", descAr: "بوت ديسكورد من الجيل التالي مع رسوم بيانية تفاعلية وتحليل.",
+                features: ["Interactive chart generation", "Webhook support", "Custom slash commands", "Auto-moderation"], featuresAr: ["توليد رسوم بيانية تفاعلية", "دعم الويب هوك", "أوامر مائلة مخصصة", "إشراف تلقائي"]
             },
             { 
-                title: "Trade Journal Pro", 
-                titleAr: "دفتر التداول المحترف",
-                price: "$149", 
-                desc: "AI-powered trade journal with pattern recognition and insights.",
-                descAr: "دفتر تداول مدعوم بالذكاء الاصطناعي مع التعرف على الأنماط والرؤى.",
-                features: ["AI pattern detection", "Performance metrics", "Mistake analyzer", "PDF export"],
-                featuresAr: ["كشف الأنماط بالذكاء الاصطناعي", "مقاييس الأداء", "محلل الأخطاء", "تصدير PDF"]
+                title: "Trade Journal Pro", titleAr: "دفتر التداول المحترف", price: "$149", 
+                desc: "AI-powered trade journal with pattern recognition and insights.", descAr: "دفتر تداول مدعوم بالذكاء الاصطناعي مع التعرف على الأنماط والرؤى.",
+                features: ["AI pattern detection", "Performance metrics", "Mistake analyzer", "PDF export"], featuresAr: ["كشف الأنماط بالذكاء الاصطناعي", "مقاييس الأداء", "محلل الأخطاء", "تصدير PDF"]
             },
             { 
-                title: "Risk Dashboard", 
-                titleAr: "لوحة إدارة المخاطر",
-                price: "$349", 
-                desc: "Real-time multi-account risk monitoring with alerts and automation.",
-                descAr: "مراقبة مخاطر متعددة الحسابات في الوقت الفعلي مع التنبيهات والأتمتة.",
-                features: ["Portfolio overview", "Drawdown protection", "Email/SMS alerts", "Auto lot adjustment"],
-                featuresAr: ["نظرة عامة على المحفظة", "حماية السحب", "تنبيهات البريد/الرسائل", "تعديل اللوت التلقائي"]
+                title: "Risk Dashboard", titleAr: "لوحة إدارة المخاطر", price: "$349", 
+                desc: "Real-time multi-account risk monitoring with alerts and automation.", descAr: "مراقبة مخاطر متعددة الحسابات في الوقت الفعلي مع التنبيهات والأتمتة.",
+                features: ["Portfolio overview", "Drawdown protection", "Email/SMS alerts", "Auto lot adjustment"], featuresAr: ["نظرة عامة على المحفظة", "حماية السحب", "تنبيهات البريد/الرسائل", "تعديل اللوت التلقائي"]
             }
         ];
 
-        // 6 Services
         const services = [
             { 
-                title: "MT4 Basic EA", 
-                titleAr: "EA أساسي MT4",
-                price: "$20", 
-                desc: "Simple strategy automation for beginners and straightforward logic.",
-                descAr: "أتمتة استراتيجية بسيطة للمبتدئين ومنطق مباشر.",
-                features: ["Single indicator strategy", "Basic money management", "2-3 day delivery", "Source code included"],
-                featuresAr: ["استراتيجية مؤشر واحد", "إدارة أموال أساسية", "تسليم 2-3 أيام", "كود المصدر متضمن"],
+                title: "MT4 Basic EA", titleAr: "EA أساسي MT4", price: "$20", 
+                desc: "Simple strategy automation for beginners and straightforward logic.", descAr: "أتمتة استراتيجية بسيطة للمبتدئين ومنطق مباشر.",
+                features: ["Single indicator strategy", "Basic money management", "2-3 day delivery", "Source code included"], featuresAr: ["استراتيجية مؤشر واحد", "إدارة أموال أساسية", "تسليم 2-3 أيام", "كود المصدر متضمن"],
                 delivery: "2-3 days"
             },
             { 
-                title: "MT5 Basic EA", 
-                titleAr: "EA أساسي MT5",
-                price: "$30", 
-                desc: "Modern MT5 automation with enhanced features and compatibility.",
-                descAr: "أتمتة MT5 حديثة مع ميزات محسنة وتوافق.",
-                features: ["MT5 object-oriented code", "Multiple timeframe support", "News filter option", "Optimized performance"],
-                featuresAr: ["كود MT5 موجه نحو الكائن", "دعم إطارات زمنية متعددة", "خيار تصفية الأخبار", "أداء محسّن"],
+                title: "MT5 Basic EA", titleAr: "EA أساسي MT5", price: "$30", 
+                desc: "Modern MT5 automation with enhanced features and compatibility.", descAr: "أتمتة MT5 حديثة مع ميزات محسنة وتوافق.",
+                features: ["MT5 object-oriented code", "Multiple timeframe support", "News filter option", "Optimized performance"], featuresAr: ["كود MT5 موجه نحو الكائن", "دعم إطارات زمنية متعددة", "خيار تصفية الأخبار", "أداء محسّن"],
                 delivery: "3-4 days"
             },
             { 
-                title: "MT4 Advanced EA", 
-                titleAr: "EA متقدم MT4",
-                price: "$150", 
-                desc: "Complex multi-strategy EA with advanced risk management and ML.",
-                descAr: "EA متعدد الاستراتيجيات معقد مع إدارة مخاطر متقدمة وتعلم آلي.",
-                features: ["Multi-indicator logic", "Advanced risk management", "Grid/Martingale options", "Backtesting optimization"],
-                featuresAr: ["منطق متعدد المؤشرات", "إدارة مخاطر متقدمة", "خيارات شبكة/مارتينجال", "تحسين الاختبار الخلفي"],
+                title: "MT4 Advanced EA", titleAr: "EA متقدم MT4", price: "$150", 
+                desc: "Complex multi-strategy EA with advanced risk management and ML.", descAr: "EA متعدد الاستراتيجيات معقد مع إدارة مخاطر متقدمة وتعلم آلي.",
+                features: ["Multi-indicator logic", "Advanced risk management", "Grid/Martingale options", "Backtesting optimization"], featuresAr: ["منطق متعدد المؤشرات", "إدارة مخاطر متقدمة", "خيارات شبكة/مارتينجال", "تحسين الاختبار الخلفي"],
                 delivery: "7-10 days"
             },
             { 
-                title: "MT5 Advanced EA", 
-                titleAr: "EA متقدم MT5",
-                price: "$200", 
-                desc: "Institutional-grade coding with AI integration and cloud connectivity.",
-                descAr: "برمجة بمستوى مؤسسي مع تكامل الذكاء الاصطناعي واتصال السحابة.",
-                features: ["Neural network integration", "Cloud-based signals", "Portfolio management", "API connectivity"],
-                featuresAr: ["تكامل الشبكة العصبية", "إشارات قائمة على السحابة", "إدارة المحفظة", "اتصال API"],
+                title: "MT5 Advanced EA", titleAr: "EA متقدم MT5", price: "$200", 
+                desc: "Institutional-grade coding with AI integration and cloud connectivity.", descAr: "برمجة بمستوى مؤسسي مع تكامل الذكاء الاصطناعي واتصال السحابة.",
+                features: ["Neural network integration", "Cloud-based signals", "Portfolio management", "API connectivity"], featuresAr: ["تكامل الشبكة العصبية", "إشارات قائمة على السحابة", "إدارة المحفظة", "اتصال API"],
                 delivery: "10-14 days"
             },
             { 
-                title: "Pine Script Strategy", 
-                titleAr: "استراتيجية Pine Script",
-                price: "$50", 
-                desc: "TradingView strategies with custom indicators and alerts.",
-                descAr: "استراتيجيات TradingView مع مؤشرات مخصصة وتنبيهات.",
-                features: ["Custom indicators", "Alert conditions", "Strategy backtesting", "Webhook integration"],
-                featuresAr: ["مؤشرات مخصصة", "شروط التنبيه", "اختبار الاستراتيجية", "تكامل الويب هوك"],
+                title: "Pine Script Strategy", titleAr: "استراتيجية Pine Script", price: "$50", 
+                desc: "TradingView strategies with custom indicators and alerts.", descAr: "استراتيجيات TradingView مع مؤشرات مخصصة وتنبيهات.",
+                features: ["Custom indicators", "Alert conditions", "Strategy backtesting", "Webhook integration"], featuresAr: ["مؤشرات مخصصة", "شروط التنبيه", "اختبار الاستراتيجية", "تكامل الويب هوك"],
                 delivery: "3-5 days"
             },
             { 
-                title: "Binance Trading Bot", 
-                titleAr: "بوت تداول باينانس",
-                price: "$300", 
-                desc: "Automated crypto bot with DCA, grid trading, and futures support.",
-                descAr: "بوت تشفير آلي مع DCA وتداول الشبكة ودعم العقود الآجلة.",
-                features: ["Spot & futures trading", "DCA automation", "Grid bot logic", "Portfolio rebalancing"],
-                featuresAr: ["تداول فوري وآجل", "أتمتة DCA", "منطق بوت الشبكة", "إعادة توازن المحفظة"],
+                title: "Binance Trading Bot", titleAr: "بوت تداول باينانس", price: "$300", 
+                desc: "Automated crypto bot with DCA, grid trading, and futures support.", descAr: "بوت تشفير آلي مع DCA وتداول الشبكة ودعم العقود الآجلة.",
+                features: ["Spot & futures trading", "DCA automation", "Grid bot logic", "Portfolio rebalancing"], featuresAr: ["تداول فوري وآجل", "أتمتة DCA", "منطق بوت الشبكة", "إعادة توازن المحفظة"],
                 delivery: "14-21 days"
             }
         ];
 
-        // 6 PREMIUM EAs (Specific Configs + NEW pairs info)
         const premiumEAs = [
             {
                 id: 1, title: "SMC Master EA", price: "$1,299", monthlySubscription: "$100", deposit: 1000, 
                 startDate: "2024-01-15", monthlyReturn: 15, 
                 desc: "Institutional Smart Money Concepts. Trades Order Blocks.",
-                todayPnL: 145.50,
-                type: 'forex',
-                pairs: ['EURUSD', 'GBPUSD', 'AUDUSD']
+                todayPnL: 145.50, type: 'forex', pairs: ['EURUSD', 'GBPUSD', 'AUDUSD'],
+                broker: "Exness", leverage: "1:500", platform: "MT5", minDeposit: "$500"
             },
             {
                 id: 2, title: "ICT Killer EA", price: "$1,499", monthlySubscription: "$150", deposit: 2000, 
                 startDate: "2024-03-01", monthlyReturn: 22, 
                 desc: "Inner Circle Trader Strategy. NY Session Killer.",
-                todayPnL: -50.20,
-                type: 'forex',
-                pairs: ['US30', 'NAS100', 'XAUUSD']
+                todayPnL: -50.20, type: 'forex', pairs: ['US30', 'NAS100', 'XAUUSD'],
+                broker: "RoboForex", leverage: "1:200", platform: "MT4", minDeposit: "$1,000"
             },
             {
                 id: 3, title: "Price Action Pro", price: "$999", monthlySubscription: "$80", deposit: 500, 
                 startDate: "2024-06-01", monthlyReturn: 12, 
                 desc: "Pure Naked Chart Analysis. No Indicators.",
-                todayPnL: 89.00,
-                type: 'forex',
-                pairs: ['EURJPY', 'USDCAD', 'USDJPY']
+                todayPnL: 89.00, type: 'forex', pairs: ['EURJPY', 'USDCAD', 'USDJPY'],
+                broker: "XM", leverage: "1:1000", platform: "MT4", minDeposit: "$200"
             },
             {
                 id: 4, title: "AI News Master", price: "$1,899", monthlySubscription: "$200", deposit: 5000, 
                 startDate: "2024-08-15", monthlyReturn: 28, 
                 desc: "Machine Learning model for economic news.",
-                todayPnL: 450.00,
-                type: 'forex',
-                pairs: ['XAUUSD', 'GBPJPY', 'USDIX']
+                todayPnL: 450.00, type: 'forex', pairs: ['XAUUSD', 'GBPJPY', 'USDIX'],
+                broker: "FBS", leverage: "1:500", platform: "MT5", minDeposit: "$1,000"
             },
             {
                 id: 5, title: "Quantum Predictor", price: "$2,499", monthlySubscription: "$250", deposit: 3000, 
                 startDate: "2025-01-02", monthlyReturn: 35, 
                 desc: "Neural Network Market Prediction.",
-                todayPnL: 120.40,
-                type: 'forex',
-                pairs: ['USDCHF', 'NZDUSD', 'EURGBP']
+                todayPnL: 120.40, type: 'forex', pairs: ['USDCHF', 'NZDUSD', 'EURGBP'],
+                broker: "XTB", leverage: "1:100", platform: "MT5", minDeposit: "$500"
             },
             {
                 id: 6, title: "Crypto Hunter Bot", price: "$3,299", monthlySubscription: "$120", deposit: 10000, 
                 startDate: "2023-11-01", monthlyReturn: 18, 
                 desc: "Specialized for BTC/ETH volatility.",
-                todayPnL: 850.20,
-                type: 'crypto',
-                pairs: ['BTCUSD', 'ETHUSD', 'SOLUSD', 'LTCUSD']
+                todayPnL: 850.20, type: 'crypto', pairs: ['BTCUSD', 'ETHUSD', 'SOLUSD', 'LTCUSD'],
+                broker: "Exness", leverage: "1:100", platform: "MT5", minDeposit: "$2,000"
             }
         ];
 
-        // --- STATE MANAGEMENT ---
         let currentLang = 'en';
         let premiumChartInstance = null;
-        let eaFilter = 'all'; // all, buy, sell
+        let eaFilter = 'all';
 
-        // --- INIT ---
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
             renderFreeEAs(1);
             renderIndicators(1);
             renderTools(1);
-            renderPremiumPage(0); // Show first Premium EA
+            renderPremiumPage(0); 
             renderServices(1);
-            renderHomeDailyProgress(); // New Home Page Feature
+            renderHomeDailyProgress();
         });
 
-        // --- NAVIGATION ---
         function toggleNav() {
             document.getElementById('navDock').classList.toggle('closed');
         }
@@ -1271,15 +1324,12 @@
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             
-            // Highlight nav btn
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            // Find button matching this section (simple check)
             const btns = document.querySelectorAll('.nav-btn');
             btns.forEach(btn => {
                 if(btn.getAttribute('onclick').includes(id)) btn.classList.add('active');
             });
             
-            // Close nav on mobile select
             if(window.innerWidth < 768) {
                 document.getElementById('navDock').classList.add('closed');
             }
@@ -1289,24 +1339,18 @@
         function setLang(lang) {
             currentLang = lang;
             document.body.dir = lang === 'ar' ? 'rtl' : 'ltr';
-            
             document.querySelectorAll('[data-en]').forEach(el => {
                 el.innerText = lang === 'ar' ? el.getAttribute('data-ar') : el.getAttribute('data-en');
             });
-            
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
             event.target.classList.add('active');
-            
-            // Re-render all dynamic content to update translations
             renderFreeEAs(1);
             renderIndicators(1);
             renderTools(1);
             renderServices(1);
-            renderPremiumPage(0); // Reset to first EA to refresh text
+            renderPremiumPage(0);
             renderHomeDailyProgress();
         }
-
-        // --- RENDERERS ---
 
         function renderPagination(elementId, totalPages, currentPage, callbackName) {
             const container = document.getElementById(elementId);
@@ -1317,7 +1361,6 @@
             container.innerHTML = html;
         }
 
-        // NEW: Render Home Daily Progress
         function renderHomeDailyProgress() {
             const grid = document.getElementById('daily-progress-grid');
             grid.innerHTML = premiumEAs.map(ea => `
@@ -1330,26 +1373,81 @@
             `).join('');
         }
 
-        // Helper: Download Handler
+        // --- NEW TRADING THEME DOWNLOAD LOGIC ---
         function downloadItem(fileName, type) {
-            if (!github_repo_url) {
-                alert("File hosting is currently being set up. Please join our Telegram to download this file immediately!");
-                window.open(telegramLink, '_blank');
-                return;
-            }
+            // 1. Setup paths
+            const safeName = fileName.replace(/\s+/g, '_');
+            const ext = type === 'MT5' ? '.ex5' : '.ex4';
+            const filePath = `./${safeName}${ext}`;
             
-            // Construct the GitHub Raw URL
-            // Ensure fileName matches how you name files in your repo (e.g., snake_case or specific extension)
-            // This assumes file is .ex4 for MT4 and .ex5 for MT5
-            const ext = type === 'MT4' ? '.ex4' : '.ex5';
-            const safeName = fileName.replace(/\s+/g, '_').toLowerCase(); // Trend Master Pro -> trend_master_pro
-            const fullUrl = `${github_repo_url}${safeName}${ext}`;
+            // 2. DOM Elements
+            const overlay = document.getElementById('download-overlay');
+            const title = document.getElementById('dl-title');
+            const price = document.getElementById('dl-price');
+            const pnl = document.getElementById('dl-pnl');
+            const status = document.getElementById('dl-status');
             
-            // Trigger download or open in new tab
-            window.open(fullUrl, '_blank');
+            // 3. Reset State
+            overlay.classList.add('active');
+            title.innerText = `BUYING: ${fileName.toUpperCase()}`;
+            pnl.classList.remove('pulse-green');
+            
+            // 4. Animation Sequence
+            
+            // Phase 1: Analyzing
+            status.innerHTML = '<span class="blink">SEARCHING LIQUIDITY...</span>';
+            price.innerText = "1.08200";
+            pnl.innerText = "+0.00%";
+            pnl.style.color = "#6b7280"; // dim gray
+
+            setTimeout(() => {
+                // Phase 2: Order Placed
+                status.innerHTML = '<span style="color:var(--gold)">FILLING ORDER...</span>';
+                
+                // Simulate fast price movement (Scalping Effect)
+                let p = 1.08200;
+                let profit = 0;
+                const interval = setInterval(() => {
+                    p += 0.00015; // move price up
+                    profit += 2.5; // move profit up
+                    
+                    price.innerText = p.toFixed(5);
+                    pnl.innerText = `+${profit.toFixed(2)}%`;
+                    pnl.style.color = "var(--profit-green)";
+                    
+                    // Simple "Jitter" effect for realism
+                    price.style.transform = `scale(${1 + Math.random()*0.02})`;
+                }, 80);
+
+                setTimeout(() => {
+                    clearInterval(interval);
+                    
+                    // Phase 3: Take Profit / Download
+                    status.innerHTML = '<span style="color:var(--profit-green)">TAKE PROFIT HIT - ASSET SECURED</span>';
+                    price.innerText = "1.09500";
+                    pnl.innerText = "+100.00%";
+                    pnl.classList.add('pulse-green');
+                    
+                    // Trigger Actual Download
+                    const link = document.createElement('a');
+                    link.href = filePath;
+                    link.download = `${safeName}${ext}`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+
+                    // Close overlay after success
+                    setTimeout(() => {
+                        overlay.classList.remove('active');
+                        price.style.transform = "scale(1)";
+                    }, 2000);
+
+                }, 2000); // 2 seconds of "trading"
+
+            }, 800); // 0.8s initial delay
         }
 
-        // 1. FREE EAs (6 per page)
+        // 1. FREE EAs
         function renderFreeEAs(page) {
             const itemsPerPage = 6;
             const start = (page-1) * itemsPerPage;
@@ -1360,7 +1458,7 @@
                 <div class="card">
                     <div class="card-header">
                         <span class="badge free">FREE</span>
-                        <span style="color:var(--text-dim)">MT4/MT5</span>
+                        <span style="color:var(--text-dim)">MT4 ONLY</span>
                     </div>
                     <h3 class="card-title">${currentLang === 'ar' ? ea.titleAr : ea.title}</h3>
                     <p class="card-desc">${ea.description}</p>
@@ -1376,11 +1474,8 @@
                     </div>
 
                     <div class="btn-group">
-                        <button class="btn btn-green" onclick="downloadItem('${ea.title}', 'MT4')">
-                            <i data-lucide="download"></i> MT4
-                        </button>
-                        <button class="btn btn-blue" onclick="downloadItem('${ea.title}', 'MT5')">
-                            <i data-lucide="download"></i> MT5
+                        <button class="btn btn-green" style="width:100%" onclick="downloadItem('${ea.title}', 'MT4')">
+                            <i data-lucide="download"></i> DOWNLOAD MT4
                         </button>
                     </div>
                 </div>
@@ -1390,7 +1485,7 @@
             lucide.createIcons();
         }
 
-        // 2. INDICATORS (6 per page)
+        // 2. INDICATORS
         function renderIndicators(page) {
             const itemsPerPage = 6;
             const start = (page-1) * itemsPerPage;
@@ -1412,7 +1507,7 @@
             renderPagination('indicators-pagination', Math.ceil(indicators.length/itemsPerPage), page, 'renderIndicators');
         }
 
-        // 3. TOOLS (3 per page)
+        // 3. TOOLS
         function renderTools(page) {
             const itemsPerPage = 3;
             const start = (page-1) * itemsPerPage;
@@ -1490,74 +1585,54 @@
         }
 
 
-        // --- PREMIUM EA LOGIC & CHARTING (COMPLEX PART) ---
-
-        // Helper: Generate daily equity data skipping weekends UNLESS crypto
+        // --- PREMIUM EA LOGIC ---
         function generateEquityData(startBalance, startDateStr, monthlyReturnPercent, isCrypto) {
             const data = [];
             const labels = [];
-            
             let currentBalance = startBalance;
             const start = new Date(startDateStr);
-            const today = new Date(); // Environment today (Sunday)
-            
-            // Approximate daily return needed to hit monthly target (compounded)
+            const today = new Date(); 
             const dailyRate = Math.pow(1 + (monthlyReturnPercent/100), 1/22) - 1;
-
             let currentDate = new Date(start);
-            
             while(currentDate <= today) {
                 const day = currentDate.getDay();
-                // If Crypto, allow all days. If Forex, skip Sun(0) and Sat(6).
                 if(isCrypto || (day !== 0 && day !== 6)) {
-                    // Add some noise/randomness
                     const noise = (Math.random() - 0.5) * (dailyRate * 5); 
                     const actualDaily = dailyRate + noise;
-                    
                     currentBalance = currentBalance * (1 + actualDaily);
-                    
                     labels.push(currentDate.toISOString().split('T')[0]);
                     data.push(currentBalance);
                 }
                 currentDate.setDate(currentDate.getDate() + 1);
             }
-            
             return { labels, data };
         }
 
-        // Helper: Mock Recent Trades with SPECIFIC Pairs
         function generateRecentTrades(count, pairs) {
             const types = ['BUY', 'SELL'];
             const trades = [];
             for(let i=0; i<count; i++) {
-                const isWin = Math.random() > 0.4; // 60% win rate
+                const isWin = Math.random() > 0.4; 
                 const amount = (Math.random() * 100 + 20).toFixed(2);
                 const pnl = isWin ? amount : -amount;
-                // Use pair from the EA's specific pairs list
                 const pair = pairs[Math.floor(Math.random() * pairs.length)];
-                
                 trades.push({
                     id: 1000 + i,
                     pair: pair,
                     type: types[Math.floor(Math.random()*2)],
                     pnl: parseFloat(pnl),
-                    time: new Date(Date.now() - (i * 1000 * 60 * 60 * 2)).toISOString().slice(11, 16) // hours ago
+                    time: new Date(Date.now() - (i * 1000 * 60 * 60 * 2)).toISOString().slice(11, 16) 
                 });
             }
             return trades;
         }
 
-        // Render Single Premium EA Page
         function renderPremiumPage(index) {
-            // Adjust index to 1-based for pagination click, 0-based for array
             let eaIndex = index;
             if(index >= 1) eaIndex = index - 1;
 
             const ea = premiumEAs[eaIndex];
             const container = document.getElementById('premium-container');
-            
-            // Calculate total profit
-            // Pass the ea.type === 'crypto' to enable weekend data
             const isCrypto = ea.type === 'crypto';
             const equityData = generateEquityData(ea.deposit, ea.startDate, ea.monthlyReturn, isCrypto);
             const currentEquity = equityData.data[equityData.data.length - 1];
@@ -1566,25 +1641,15 @@
 
             container.innerHTML = `
                 <div class="premium-layout">
-                    <!-- LEFT COLUMN: Sidebar + New Panel -->
                     <div class="left-column">
                         <div class="premium-sidebar">
                             <span class="badge premium" style="font-size:1rem; margin-bottom:1rem; display:inline-block">${currentLang === 'ar' ? 'EA بريميوم' : 'PREMIUM EA'} #${ea.id}</span>
                             <h1 style="font-family:'Orbitron'; font-size:2rem; line-height:1.2; margin-bottom:0.5rem; color:var(--gold)">${ea.title}</h1>
                             <p style="color:var(--text-secondary); margin-bottom:2rem">${ea.desc}</p>
                             
-                            <div class="data-row">
-                                <span class="data-label">${currentLang === 'ar' ? 'السعر' : 'Price'}</span>
-                                <span class="data-val" style="font-size:1.5rem; color:#fff">${ea.price}</span>
-                            </div>
-                            <div class="data-row">
-                                <span class="data-label">${currentLang === 'ar' ? 'تاريخ البدء' : 'Start Date'}</span>
-                                <span class="data-val">${ea.startDate}</span>
-                            </div>
-                            <div class="data-row">
-                                <span class="data-label">${currentLang === 'ar' ? 'الإيداع الأولي' : 'Initial Deposit'}</span>
-                                <span class="data-val">${ea.deposit.toLocaleString()}</span>
-                            </div>
+                            <div class="data-row"><span class="data-label">${currentLang === 'ar' ? 'السعر' : 'Price'}</span><span class="data-val" style="font-size:1.5rem; color:#fff">${ea.price}</span></div>
+                            <div class="data-row"><span class="data-label">${currentLang === 'ar' ? 'تاريخ البدء' : 'Start Date'}</span><span class="data-val">${ea.startDate}</span></div>
+                            <div class="data-row"><span class="data-label">${currentLang === 'ar' ? 'الإيداع الأولي' : 'Initial Deposit'}</span><span class="data-val">${ea.deposit.toLocaleString()}</span></div>
                             
                             <div class="stat-box highlight" style="margin-top:2rem; text-align:center">
                                 <div style="font-size:0.9rem; color:var(--text-dim)">${currentLang === 'ar' ? 'ربح اليوم' : "Today's Profit"}</div>
@@ -1594,67 +1659,43 @@
                             </div>
                         </div>
 
-                        <!-- NEW: Info & Action Panel -->
                         <div class="premium-action-panel">
                             <h3 style="color:var(--text-primary); margin-bottom:1rem; font-family:'Orbitron'">${currentLang === 'ar' ? 'الإجراءات والمعلومات' : 'ACTIONS & INFO'}</h3>
-                            
-                            <!-- Buy Buttons Moved Here -->
+                            <div style="margin-bottom: 1.5rem; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px;">
+                                <div class="data-row"><span class="data-label">Min Deposit</span><span class="data-val" style="color:var(--gold)">${ea.minDeposit}</span></div>
+                                <div class="data-row"><span class="data-label">Broker Used</span><span class="data-val" style="color:#fff">${ea.broker}</span></div>
+                                <div class="data-row"><span class="data-label">Leverage</span><span class="data-val" style="color:#fff">${ea.leverage}</span></div>
+                                <div class="data-row"><span class="data-label">Platform</span><span class="data-val" style="color:var(--blue-neon)">${ea.platform}</span></div>
+                            </div>
                             <div style="display:flex; flex-direction:column; gap:0.8rem; margin-bottom:1.5rem;">
                                 <button class="btn btn-green premium-buy-btn" style="width:100%; padding:1rem; font-size:1rem; position:relative" onclick="window.open('${telegramLink}', '_blank')">
-                                    <i data-lucide="key" style="width:18px"></i>
-                                    ${currentLang === 'ar' ? 'شراء الترخيص' : 'BUY LICENSE'}
+                                    <i data-lucide="key" style="width:18px"></i> ${currentLang === 'ar' ? 'شراء الترخيص' : 'BUY LICENSE'}
                                 </button>
                                 <button class="btn btn-blue premium-subscribe-btn" style="width:100%; padding:1rem; font-size:1rem; position:relative" onclick="window.open('${telegramLink}', '_blank')">
-                                    <i data-lucide="calendar" style="width:18px"></i>
-                                    ${currentLang === 'ar' ? `اشتراك ${ea.monthlySubscription}/شهر` : `SUBSCRIBE ${ea.monthlySubscription}/MO`}
+                                    <i data-lucide="calendar" style="width:18px"></i> ${currentLang === 'ar' ? `اشتراك ${ea.monthlySubscription}/شهر` : `SUBSCRIBE ${ea.monthlySubscription}/MO`}
                                 </button>
                             </div>
-
-                            <!-- New: Telegram Link -->
                              <a href="${telegramLink}" target="_blank" class="btn btn-outline" style="width:100%; margin-bottom:1rem; border-color: #2AABEE; color:#2AABEE; display:flex; justify-content:center; align-items:center;">
-                                <i data-lucide="send" style="width:16px; margin-right:5px"></i>
-                                ${currentLang === 'ar' ? 'تيليجرام' : 'TELEGRAM'}
+                                <i data-lucide="send" style="width:16px; margin-right:5px"></i> ${currentLang === 'ar' ? 'تيليجرام' : 'TELEGRAM'}
                             </a>
-
-                            <!-- New: Shortcuts to Services/Tools -->
-                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem">
-                                <button class="btn btn-outline" onclick="showSection('tools')" style="font-size:0.8rem">
-                                    <i data-lucide="wrench" style="width:12px"></i> ${currentLang === 'ar' ? 'الأدوات' : 'TOOLS'}
-                                </button>
-                                <button class="btn btn-outline" onclick="showSection('services')" style="font-size:0.8rem">
-                                    <i data-lucide="code" style="width:12px"></i> ${currentLang === 'ar' ? 'الخدمات' : 'SERVICES'}
-                                </button>
-                            </div>
-
-                            <div style="text-align:center; font-size:0.75rem; color:var(--text-dim); margin-top:1rem; border-top:1px solid rgba(255,255,255,0.1); padding-top:0.5rem;">
-                                ${currentLang === 'ar' ? 'الاشتراك الشهري يشمل الوصول لحساب المستثمر' : 'Monthly subscription includes investor account access'}
+                            <div class="broker-list">
+                                <div style="font-size:0.8rem; color:var(--text-dim); margin-bottom:0.5rem;">RECOMMENDED BROKERS</div>
+                                <div>
+                                    <span class="broker-tag">EXNESS</span><span class="broker-tag">XM</span>
+                                    <span class="broker-tag">ROBO FOREX</span><span class="broker-tag">FBS</span><span class="broker-tag">XTB</span>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Main Content (Chart & Trades) -->
                     <div class="premium-main">
-                        <!-- Stats Grid -->
                         <div class="premium-stats-grid">
-                            <div class="stat-box">
-                                <div class="data-label">${currentLang === 'ar' ? 'الرصيد الحالي' : 'Current Equity'}</div>
-                                <div class="data-val" style="font-size:1.5rem">${currentEquity.toLocaleString(undefined, {maximumFractionDigits:0})}</div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="data-label">${currentLang === 'ar' ? 'إجمالي العائد' : 'Total Return'}</div>
-                                <div class="data-val" style="color:var(--profit-green)">+${totalReturn}%</div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="data-label">${currentLang === 'ar' ? 'متوسط شهري' : 'Avg Monthly'}</div>
-                                <div class="data-val">+${ea.monthlyReturn}%</div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="data-label">${currentLang === 'ar' ? 'السحب' : 'Drawdown'}</div>
-                                <div class="data-val" style="color:var(--loss-red)">${(Math.random()*15 + 5).toFixed(1)}%</div>
-                            </div>
+                            <div class="stat-box"><div class="data-label">${currentLang === 'ar' ? 'الرصيد الحالي' : 'Current Equity'}</div><div class="data-val" style="font-size:1.5rem">${currentEquity.toLocaleString(undefined, {maximumFractionDigits:0})}</div></div>
+                            <div class="stat-box"><div class="data-label">${currentLang === 'ar' ? 'إجمالي العائد' : 'Total Return'}</div><div class="data-val" style="color:var(--profit-green)">+${totalReturn}%</div></div>
+                            <div class="stat-box"><div class="data-label">${currentLang === 'ar' ? 'متوسط شهري' : 'Avg Monthly'}</div><div class="data-val">+${ea.monthlyReturn}%</div></div>
+                            <div class="stat-box"><div class="data-label">${currentLang === 'ar' ? 'السحب' : 'Drawdown'}</div><div class="data-val" style="color:var(--loss-red)">${(Math.random()*15 + 5).toFixed(1)}%</div></div>
                         </div>
 
-                        <!-- Chart -->
                         <div class="chart-container">
                             <div class="chart-controls">
                                 <button class="chart-btn" onclick="updateChartTimeframe(7, ${eaIndex})">${currentLang === 'ar' ? 'أسبوع' : 'LAST WEEK'}</button>
@@ -1665,7 +1706,6 @@
                             <canvas id="eaChart"></canvas>
                         </div>
 
-                        <!-- Recent Trades -->
                         <div class="trades-container">
                             <div style="display:flex; justify-content:space-between; margin-bottom:1rem; align-items:center; flex-wrap:wrap; gap:1rem">
                                 <h3 style="font-family:'Orbitron'">${currentLang === 'ar' ? `الصفقات الأخيرة (${isCrypto ? 'عملات رقمية' : 'فوركس'})` : `RECENT TRADES (${isCrypto ? 'Crypto' : 'Forex'})`}</h3>
@@ -1675,37 +1715,25 @@
                                     <button class="btn btn-outline" style="padding:0.3rem 0.8rem" onclick="filterTrades('SELL', this)">${currentLang === 'ar' ? 'بيع' : 'SELL'}</button>
                                 </div>
                             </div>
-                            <div id="trades-list">
-                                <!-- Trades Injected -->
-                            </div>
+                            <div id="trades-list"></div>
                         </div>
                     </div>
                 </div>
             `;
             
-            // Draw Chart
             drawChart(equityData.labels, equityData.data);
-            
-            // Generate Trades using SPECIFIC PAIRS
             window.currentTrades = generateRecentTrades(20, ea.pairs);
             renderTradesList(window.currentTrades);
-
-            // Pagination Render
             renderPagination('premium-pagination', 6, eaIndex + 1, 'renderPremiumPage');
             lucide.createIcons();
         }
 
-        // Chart.js Logic
         function drawChart(labels, data) {
             const ctx = document.getElementById('eaChart').getContext('2d');
-            
-            // Destroy old instance
             if(premiumChartInstance) premiumChartInstance.destroy();
-
             const gradient = ctx.createLinearGradient(0, 0, 0, 400);
             gradient.addColorStop(0, 'rgba(0, 255, 136, 0.4)');
             gradient.addColorStop(1, 'rgba(0, 255, 136, 0)');
-
             premiumChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -1728,43 +1756,31 @@
                     plugins: { legend: { display: false } },
                     scales: {
                         x: { display: false },
-                        y: { 
-                            grid: { color: 'rgba(255,255,255,0.05)' },
-                            ticks: { color: '#6b7280' }
-                        }
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#6b7280' } }
                     }
                 }
             });
         }
 
-        // Filter Logic for Chart (Last Week, Month, etc)
         function updateChartTimeframe(days, eaIndex) {
-            // Update active btn style
             const btns = document.querySelectorAll('.chart-btn');
             btns.forEach(b => b.classList.remove('active'));
             event.target.classList.add('active');
-
             const ea = premiumEAs[eaIndex];
-            // Must respect crypto flag here too
             const isCrypto = ea.type === 'crypto';
             const fullData = generateEquityData(ea.deposit, ea.startDate, ea.monthlyReturn, isCrypto);
-            
             let filteredLabels = fullData.labels;
             let filteredData = fullData.data;
-
             if(days < 9999) {
-                // Slice the arrays from the end
                 const sliceAmount = days > filteredData.length ? filteredData.length : days;
                 filteredLabels = filteredLabels.slice(-sliceAmount);
                 filteredData = filteredData.slice(-sliceAmount);
             }
-
             premiumChartInstance.data.labels = filteredLabels;
             premiumChartInstance.data.datasets[0].data = filteredData;
             premiumChartInstance.update();
         }
 
-        // Recent Trades Filter Logic
         function renderTradesList(trades) {
             const list = document.getElementById('trades-list');
             list.innerHTML = trades.map(t => `
@@ -1780,7 +1796,6 @@
         }
 
         function filterTrades(type, btnElement) {
-            // style
             const group = btnElement.parentElement;
             group.querySelectorAll('.btn').forEach(b => {
                 b.classList.remove('btn-green');
@@ -1788,8 +1803,6 @@
             });
             btnElement.classList.remove('btn-outline');
             btnElement.classList.add('btn-green');
-
-            // logic
             if(type === 'all') {
                 renderTradesList(window.currentTrades);
             } else {
@@ -1803,7 +1816,6 @@
                 alert('Address copied!');
             });
         }
-
     </script>
 </body>
-</html>
+</html>margin-bottom: 1rem;">
